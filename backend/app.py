@@ -4,10 +4,15 @@ import uuid
 
 import fastapi
 import pydantic
+from fastapi.staticfiles import StaticFiles
 
-app = fastapi.FastAPI(root_path="/api")
+app = fastapi.FastAPI()
 
 case_path = pathlib.Path(os.getcwd()) / "cases"
+
+static_path = pathlib.Path(__file__).parent / "static"
+index_path = static_path / "index.html"
+app.mount("/assets", StaticFiles(directory=static_path / "assets"))
 
 
 class ReceiveResult(pydantic.BaseModel):
@@ -19,7 +24,7 @@ class StatusResult(pydantic.BaseModel):
     case_id: uuid.UUID
 
 
-@app.post("/receive-file")
+@app.post("/api/receive-file")
 def receive_file(file: bytes = fastapi.File(...)) -> ReceiveResult:
     case_id = uuid.uuid4()
     case_file = case_path / f"{case_id}.dat"
@@ -28,9 +33,14 @@ def receive_file(file: bytes = fastapi.File(...)) -> ReceiveResult:
     return ReceiveResult(case_id=case_id)
 
 
-@app.get("/case/{case_id}")
+@app.get("/api/case/{case_id}")
 def get_case(case_id: uuid.UUID) -> StatusResult:
     case_file = case_path / f"{case_id}.dat"
     if case_file.exists():
         return StatusResult(case_id=case_id, size=case_file.stat().st_size)
     raise fastapi.HTTPException(status_code=404, detail="Case not found")
+
+
+@app.get("/{full_path:path}")
+def get_index():
+    return fastapi.responses.FileResponse(index_path)

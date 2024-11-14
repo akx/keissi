@@ -1,5 +1,6 @@
 *.egg-info
 *.local
+*.lock
 *.log*
 *.njsproj
 *.ntvs*
@@ -7,15 +8,16 @@
 *.sln
 *.suo
 *.sw?
+*.tsbuildinfo
 .DS_Store
 .idea
 .venv
 /dist*
 __pycache__/
 backend/cases
+backend/static
 build/
 dist/
 logs
 node_modules
 wheels/
-*.lock

@@ -41,6 +41,8 @@ function App() {
   };
   return (
     <div className="App">
+      Current location: {window.location.href}
+      <br />
       <form onSubmit={handleSubmit}>
         <input type="file" name="file" required />
         <button type="submit">Submit</button>
