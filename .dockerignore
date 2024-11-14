@@ -1,0 +1,4 @@
+backend/.venv
+backend/cases
+backend/static
+frontend/node_modules
