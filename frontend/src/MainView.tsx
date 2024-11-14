@@ -1,5 +1,6 @@
 import React from "react";
 import useSWR from "swr";
+import { Link } from "react-router-dom";
 
 interface ReceiveResult {
   case_id: string;
@@ -10,7 +11,7 @@ interface StatusResult {
   case_id: string;
 }
 
-function App() {
+function MainView() {
   const [caseId, setCaseId] = React.useState<string | null>(null);
   const caseStatusSWR = useSWR<StatusResult | null>(
     caseId ? `/api/case/${caseId}` : null,
@@ -41,15 +42,17 @@ function App() {
   };
   return (
     <div className="App">
-      Current location: {window.location.href}
-      <br />
       <form onSubmit={handleSubmit}>
         <input type="file" name="file" required />
         <button type="submit">Submit</button>
       </form>
       <div>{JSON.stringify(caseStatusSWR.data)}</div>
+      <br />
+      Current location: {window.location.pathname} –{" "}
+      <Link to="/help">help</Link>
+      <br />
     </div>
   );
 }
 
-export default App;
+export default MainView;
